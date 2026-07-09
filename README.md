@@ -77,20 +77,36 @@ pnpm workspaces, no build orchestration tool — see SPEC.md §12.
 
 ## Deployment (Railway)
 
-Two services in one Railway project, both pointed at the same Supabase
-instance:
+Two services in one Railway project, both built from this same repo and
+both pointed at the same Supabase instance. **Do not set a per-service
+Root Directory** — this is a pnpm workspace, and narrowing the root
+directory breaks pnpm's ability to resolve `packages/shared` during
+install. Instead, each app carries its own `railway.json`
+(`apps/bot/railway.json`, `apps/dashboard/railway.json`) with the right
+build/start commands; point each Railway service at its file via
+**Settings → Custom Config File Path**:
 
-- **bot** — root dir `apps/bot`, start command `pnpm start`, set
-  `BOT_WEBHOOK_URL` to the Railway-assigned public URL + `/webhook`.
-- **dashboard** — root dir `apps/dashboard`, start command `pnpm start`
-  (Next.js).
+- **bot** service → Config File Path: `apps/bot/railway.json`
+- **dashboard** service → Config File Path: `apps/dashboard/railway.json`
 
-Both need the env vars listed in `.env.example`. Set up two Railway Cron
-Jobs (or rely on the in-process `node-cron` scheduler in `apps/bot`,
-see `apps/bot/src/jobs`) for:
+That's the only setting Railway requires per service beyond env vars —
+everything else (build command, start command, watch paths) is defined
+in those files and stays in version control.
 
-- Cycle open — 1st of each month
-- Weekly nudge — weekly until the cycle deadline
+Env vars (Settings → Variables), per `.env.example`:
+
+- **bot**: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `TELEGRAM_BOT_TOKEN`,
+  `TELEGRAM_BOT_USERNAME`, and `BOT_WEBHOOK_URL` (set this to the
+  Railway-assigned public URL + `/webhook` once the service has a
+  domain), optionally `BOT_WEBHOOK_SECRET`.
+- **dashboard**: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+  `TELEGRAM_BOT_TOKEN`, `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME`,
+  `SESSION_SECRET`, `NEXT_PUBLIC_APP_URL`.
+
+Reminders run via the in-process `node-cron` scheduler in
+`apps/bot/src/jobs` (cycle-open on the 1st of the month, weekly nudge
+every Monday) — no separate Railway Cron Jobs needed as long as the bot
+service stays running.
 
 ## Notes on open items
 

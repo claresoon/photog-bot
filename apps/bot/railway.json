@@ -1,0 +1,10 @@
+{
+  "build": {
+    "buildCommand": "pnpm --filter @photog-bot/bot build",
+    "watchPatterns": ["apps/bot/**", "packages/shared/**", "pnpm-lock.yaml"]
+  },
+  "deploy": {
+    "startCommand": "pnpm --filter @photog-bot/bot start",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}

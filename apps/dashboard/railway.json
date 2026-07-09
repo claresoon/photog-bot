@@ -1,0 +1,10 @@
+{
+  "build": {
+    "buildCommand": "pnpm --filter @photog-bot/dashboard build",
+    "watchPatterns": ["apps/dashboard/**", "packages/shared/**", "pnpm-lock.yaml"]
+  },
+  "deploy": {
+    "startCommand": "pnpm --filter @photog-bot/dashboard start",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}
