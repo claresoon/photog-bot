@@ -29,6 +29,9 @@ importers:
       node-cron:
         specifier: ^3.0.3
         version: 3.0.3
+      tsx:
+        specifier: ^4.16.5
+        version: 4.23.0
     devDependencies:
       '@types/node':
         specifier: ^20.14.15
@@ -36,9 +39,6 @@ importers:
       '@types/node-cron':
         specifier: ^3.0.11
         version: 3.0.11
-      tsx:
-        specifier: ^4.16.5
-        version: 4.23.0
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
